@@ -8,9 +8,14 @@ enemyhealth = (500)
 playermana = (100)
 manacap = (100)
 healthcap = (500)
+hitchance = (13)
+randendmg = (50)
+randplaydmg = (30)
+
 
 playerattack = False
 playerdefend = False
+stagger = False
 
 
 # the function to clear the terminal
@@ -23,6 +28,8 @@ def clear_terminal():
 
 def enemy_atk():
     global playerhealth, playerdefend
+    if playerhealth > healthcap:
+        playerhealth = healthcap
     if not playerdefend:
         randendmg = random.randint(50, 70)
     elif playerdefend:
@@ -31,6 +38,20 @@ def enemy_atk():
     print(f'Your opponent did {randendmg} damage!')
     playerhealth -= randendmg
     time.sleep(2)
+
+
+def boss_atk():
+    global playerhealth, playerdefend, randendmg
+    if playerhealth > healthcap:
+        playerhealth = healthcap
+    if not playerdefend:
+        randendmg = random.randint(50, 70)
+    elif playerdefend:
+        randendmg = random.randint(20, 40)
+        playerdefend = False
+    print(f'Your opponent did {randendmg} damage!')
+    time.sleep(2)
+    playerhealth -= randendmg
 
 
 def item():
@@ -129,10 +150,27 @@ def player_atk():
     if playerattack:
         randplaydmg = random.randint(50, 70)
         playerattack = False
-    print(f'You did {randplaydmg} damage!')
+    print(f'{playername} did {randplaydmg} damage!')
     enemyhealth -= randplaydmg
     if enemyhealth > 0:
         enemy_atk()
+
+
+def atk_boss():
+    global hitchance, enemyhealth, stagger
+    if not stagger:
+        hitchance = random.randint(1, 50)
+    if stagger:
+        hitchance = random.randint(1, 25)
+        stagger = False
+    if hitchance == 13:
+        print('You hit and did 1 damage!')
+        time.sleep(2)
+        enemyhealth -= 1
+    else:
+        print('You missed!')
+        time.sleep(2)
+        boss_atk()
 
 
 # this is the beginning of the game
@@ -141,19 +179,35 @@ def intro():
     playername = input('What is your name?\n')
     print(f'Hello {playername}!')
     time.sleep(2)  # makes the text stay on screen for two seconds
+    return playername
 
 
-intro()
+playername = intro()
+while (
+    playername.upper() == 'SECRETBOSS'
+    and playerhealth > 0
+    and enemyhealth > 0
+):
+    enemyhealth = 1
+    clear_terminal()
+    print(f'Player Health: {playerhealth} HP   \
+    SHADOW OF GUSS: {enemyhealth} HP')
+    print(f'Mana {playermana}')
+    bossact = input('\nActions:\n[1] Attack\n[2] Spells\n[3] Run\n')
+    if bossact == '1':
+        atk_boss()
 
 
-while playerhealth > 0 and enemyhealth > 0:
+while (
+    not playername.upper() == 'SECRETBOSS'
+    and playerhealth > 0
+    and enemyhealth > 0
+):
     clear_terminal()
     playermana += 20
     if playermana > manacap:
         playermana = manacap
-    if playerhealth > healthcap:
-        playerhealth = healthcap
-    print(f'Player Health {playerhealth}   Enemy Health {enemyhealth}')
+    print(f'Player Health: {playerhealth}   Enemy Health: {enemyhealth}')
     print(f'Mana {playermana}\n')
     action = input('Actions:\n[1] Attack\n[2] Items\n[3] Spells\n[4] Run\n')
     if action == '1':
@@ -169,3 +223,13 @@ while playerhealth > 0 and enemyhealth > 0:
     else:
         print('Invalid action, try again')
         time.sleep(2)
+
+
+while enemyhealth <= 0:
+    print('You Won!')
+    break
+
+
+while playerhealth <= 0:
+    print('You Lost :(')
+    break
