@@ -8,9 +8,9 @@ enemyhealth = (500)
 playermana = (100)
 manacap = (100)
 healthcap = (500)
-hitchance = (13)
-randendmg = (50)
-randplaydmg = (30)
+hitchance = None
+randendmg = None
+randplaydmg = None
 
 
 playerattack = False
@@ -89,6 +89,35 @@ def item():
     else:
         print('Invalid action, try again')
         time.sleep(2)
+
+
+def secretspell():
+    clear_terminal()
+    global playermana, stagger, playerhealth
+    print('Spells:\n[1] Heal: Heals 60 HP (60 mana)')
+    print('[2 Stagger: Gives a higher chance to hit the enemy (40 mana)]')
+    print('[3] Back')
+    spell = input('What spell would you like to cast?')
+    if spell == '1':
+        if playermana >= 60 and playerhealth < 500:
+            playerhealth += 60
+            playermana -= 60
+            print('You healed 60 hp!')
+            time.sleep(2)
+            if enemyhealth > 0:
+                boss_atk()
+        else:
+            print('Not enough mana! You need 60 mana!')
+    elif spell == '2':
+        if playermana >= 60:
+            stagger = True
+            print('Your next attack will have a higher chance to hit!')
+            time.sleep(2)
+            boss_atk()
+    elif spell == '3':
+        None
+    else:
+        print('Invalid action, try again')
 
 
 def spell():
@@ -190,12 +219,20 @@ while (
 ):
     enemyhealth = 1
     clear_terminal()
+    playermana += 20
     print(f'Player Health: {playerhealth} HP   \
     SHADOW OF GUSS: {enemyhealth} HP')
     print(f'Mana {playermana}')
     bossact = input('\nActions:\n[1] Attack\n[2] Spells\n[3] Run\n')
     if bossact == '1':
         atk_boss()
+    elif bossact == '2':
+        secretspell()
+    elif bossact == '3':
+        print('You Lost! :(')
+        break
+    else:
+        print('Invalid input, try again')
 
 
 while (
