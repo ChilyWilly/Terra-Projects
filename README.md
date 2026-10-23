@@ -1,11 +1,7 @@
-This is meant to be played on the computer terminal and runs on Python.
-Use the numbers and click enter for inputs.
-If you wan to access the "secret" boss, then name your player "secretboss".
-
-To install the dependencies use the terminal and type:
-
-pip install -r requirements.txt
-
-then run the game with:
-
-python main.py
+-Run the .exe file to play the game.
+-Use the numbers shown in the terminal "1,2,3,4" and click the enter key for inputs.
+-If you wan to access the "secret" boss, then name your player "secretboss".
+-There are commands to either attack, use spells, or use items.
+-Each command also has sub commands for specific uses (Ex. "spells" leads to specific spells for you to use.)
+-You have mana and HP, and lose when your HP goes to zero.
+-If you make the enemy's HP go down to zero, you win!
